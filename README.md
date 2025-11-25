@@ -1,114 +1,114 @@
-<!-- README.md -->
+<!-- HEADER WITH GLITCH VIBES -->
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=00F7FF&height=300&section=header&text=Lab%20Man%20NIE&fontSize=90&animation=fadeIn&fontAlignY=38&desc=Experimenting%20in%20Prod%20Since%202023&descAlignY=51&descAlign=62" alt="Lab Man NIE header" width="100%"/>
+</div>
 
-<!-- Header -->
-<h1 align="center">👨‍🔬 Lab Man NIE</h1>
+<!-- TYPING ANIMATION (The Chaos Terminal) -->
 <p align="center">
-  <em>Temporal lab intern • Dice collector • Latte art enthusiast</em><br>
-  <strong>I break things so you don’t have to.</strong>
+  <a href="https://github.com/labmannie">
+    <img src="https://readme-typing-svg.demolab.com?font=Press+Start+2P&size=18&duration=2000&pause=500&color=F70000&background=00000000&vCenter=true&multiline=true&width=600&height=80&lines=INITIATING+CHAOS_SEQUENCE...;LOADING+COFFEE_MODULE.exe;WARNING:+SEGMENTATION+FAULT+IMMINENT;STATUS:+MEME_OVERLOAD;lab_man_nie@localhost:~$+sudo+ship_it" alt="Typing SVG" />
+  </a>
 </p>
 
-<!-- Animated typing banner -->
+<!-- INTERACTIVE BADGE GRID -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=800&color=00F7FF&center=true&vCenter=true&width=700&lines=Welcome+to+the+Chaos+Lab;Code+Gremlin+Online;Bug+Whisperer+Activated;printf(%22hope%22)+%3D%3E+Segmentation+Fault%3F;Shipping+features+since+last+night" alt="typing animation">
+  <!-- Visitor Counter disguised as Geiger Counter -->
+  <img src="https://profile-counter.glitch.me/labmannie/count.svg" alt="Geiger Counter">
+  <br>
+  <a href="https://github.com/labmannie">
+    <img src="https://img.shields.io/badge/OS-Arch_Linux_(I_use_it_btw)-1793d1?style=for-the-badge&logo=linux" alt="Linux">
+  </a>
+  <a href="https://github.com/labmannie">
+    <img src="https://img.shields.io/badge/Code-Spaghetti-FF4500?style=for-the-badge&logo=shazam">
+  </a>
+  <a href="https://github.com/labmannie">
+    <img src="https://img.shields.io/badge/Coffee-IV_Drip-6F4E37?style=for-the-badge&logo=buy-me-a-coffee">
+  </a>
+  <a href="https://github.com/labmannie">
+    <img src="https://img.shields.io/badge/Testing-In_Production-critical?style=for-the-badge&logo=mediafire">
+  </a>
 </p>
 
-<!-- Badges -->
+---
+
+<!-- ACCORDION SECTIONS FOR CLEAN INTERACTIVITY -->
+<details open>
+<summary><h2>🧪 The Specimen (About Me)</h2></summary>
+<br>
+
+> **Warning:** This user operates on 90% caffeine and 10% stack trace errors.
+
+<img align="right" src="https://media.giphy.com/media/unQ3IJU2RG7DO/giphy.gif" width="180" alt="hacking cat">
+
+- 🧙‍♂️ **Class:** Lab Wizard / Code Necromancer
+- 🎲 **Methodology:** `randint(0, 1) ? commit() : delete_repo()`
+- 🔭 **Observation:** I write code that sometimes works—which is statistically significant.
+- 💬 **Language:** Python, C, Sarcasm, and Meme.
+- ⚡ **Superpower:** Converting pizza into `SyntaxError`.
+
+</details>
+
+<details>
+<summary><h2>🛠️ The Toolkit (Tech Stack)</h2></summary>
+<br>
+
+| Core | Frameworks | Tools of Destruction |
+| :---: | :---: | :---: |
+| <img src="https://skillicons.dev/icons?i=python,c,js,html,css&theme=dark" /> | <img src="https://skillicons.dev/icons?i=django,flask,react&theme=dark" /> | <img src="https://skillicons.dev/icons?i=git,vscode,linux,docker&theme=dark" /> |
+
+</details>
+
+<details>
+<summary><h2>📦 Lab Experiments (Featured Repos)</h2></summary>
+<br>
+
+| ☢️ Experiment | 🧬 Description | 💥 Status |
+| :--- | :--- | :--- |
+| [**students-django**](https://github.com/labmannie/students-django) | NIE Students in 4K Ultra HD. | ![Build](https://img.shields.io/badge/Build-Passing-brightgreen) |
+| [**django-calc**](https://github.com/labmannie/django-calc) | `2 + 2 = 5` (sometimes). | ![Chaos](https://img.shields.io/badge/Math-Debatable-yellow) |
+| [**capstone**](https://github.com/labmannie/capstone) | The final boss. No cheat codes. | ![Sweat](https://img.shields.io/badge/Stress-High-red) |
+| [**DSA_project**](https://github.com/labmannie/DSA_project) | LeetCode style pain. | ![BigO](https://img.shields.io/badge/O(n)-Squared-blueviolet) |
+
+</details>
+
+---
+
+<!-- THE SNAKE GAME (Requires GitHub Action) -->
+<h2 align="center">🐍 The Consumption Graph</h2>
 <p align="center">
-  <img alt="Profile views" src="https://komarev.com/ghpvc/?username=labmannie&style=for-the-badge&color=brightgreen">
-  <img alt="Made with memes" src="https://img.shields.io/badge/Made%20with-memes-%23FF69B4?style=for-the-badge">
-  <img alt="Chaos level" src="https://img.shields.io/badge/Chaos-Over%209000-%23ff0000?style=for-the-badge">
-  <img alt="NIE Labs" src="https://img.shields.io/badge/NIE-Labs-blue?style=for-the-badge">
+  <img src="https://github.com/labmannie/labmannie/blob/output/github-contribution-grid-snake.svg" alt="Snake animation" />
 </p>
 
-<hr/>
+<!-- GITHUB STATS - DARK MODE GLITCH -->
+<h2 align="center">📉 Damage Report</h2>
 
-<!-- About -->
-<h2>🧠 About me</h2>
-<ul>
-  <li><strong>Lab wizard @NIE</strong> — conducting experiments on code and coffee.</li>
-  <li><strong>Writes code that sometimes works</strong> — statistically significant.</li>
-  <li><strong>Bug whisperer</strong> — they speak; I listen.</li>
-  <li><strong>Commit messages</strong> decided by a d20 dice roll.</li>
-</ul>
+<div align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=labmannie&show_icons=true&theme=radical&rank_icon=github&include_all_commits=true&count_private=true" height="180" alt="stats graph" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=labmannie&layout=compact&theme=radical&hide_border=true" height="180" alt="languages graph" />
+</div>
 
-<!-- Tech stack (fun HTML block) -->
-<h2>🔧 Tech stack</h2>
-<pre>
-Languages: Python, C, JavaScript, HTML, CSS
-Frameworks: Django
-Tools: Git, VS Code, Solid Edge, Terminal
-Mindset: Try → Fail → Debug → Meme → Repeat
-</pre>
+<br>
 
-<!-- Featured repos table -->
-<h2>📦 Featured repositories</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Repo</th>
-      <th>Description</th>
-      <th>Tech</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="https://github.com/labmannie/students-django">students-django</a></td>
-      <td>NIE students, now in HD.</td>
-      <td>Python (Django)</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/labmannie/django-calc">django-calc</a></td>
-      <td>A calculator that may or may not calculate.</td>
-      <td>HTML, Django</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/labmannie/capstone">capstone</a></td>
-      <td>The final boss of my coding arc.</td>
-      <td>Python</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/labmannie/DSA_project">DSA_project</a></td>
-      <td>Task Master: because chaos needs structure.</td>
-      <td>CSS + DSA vibes</td>
-    </tr>
-  </tbody>
-</table>
+<div align="center">
+  <img src="https://github-profile-trophies.vercel.app/?username=labmannie&theme=radical&no-frame=true&no-bg=true&margin-w=4" />
+</div>
 
-<hr/>
+---
 
-<!-- Fun GIF banner -->
+<!-- RANDOM MEME & JOKE GENERATOR -->
+<h2 align="center">🎭 Daily Dopamine</h2>
+
 <p align="center">
-  <img src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif" alt="hacker gif" width="600">
+  <!-- Random Programmer Joke -->
+  <img src="https://readme-jokes.vercel.app/api?theme=radical" alt="Jokes Card" width="500" />
 </p>
 
-<!-- Lab rules -->
-<h2>🧪 Lab rules</h2>
-<pre>
-1. If it compiles, ship it.
-2. If it crashes, blame the compiler.
-3. If it works, don’t touch it.
-4. If it doesn’t work, meme it.
-</pre>
+---
 
-<!-- Stats -->
-<h2>🧨 GitHub stats</h2>
+<!-- FOOTER -->
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=labmannie&show_icons=true&theme=radical" alt="stats">
-  <br/>
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=labmannie&theme=radical" alt="streak">
-  <br/>
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=labmannie&theme=radical" alt="summary">
+  <img src="https://media.giphy.com/media/L1R1TVXRtNMry/giphy.gif" width="50">
+  <br>
+  <b>"If it compiles, ship it. If it explodes, it’s a feature."</b><br>
+  <sub>📍 NIE Labs (127.0.0.1) • 📧 <a href="mailto:labmannie@gmail.com">Send Help</a></sub>
 </p>
-
-<!-- Contact -->
-<h2>📫 Contact</h2>
-<ul>
-  <li><strong>Email:</strong> <a href="mailto:labmannie@gmail.com">labmannie@gmail.com</a></li>
-  <li><strong>Location:</strong> NIE Labs, 127.0.0.1</li>
-  <li><strong>Alt:</strong> If this README loaded, the experiment succeeded.</li>
-</ul>
-
-<!-- Footer quote -->
-<blockquote>
-  “Code is like a lab experiment. If it doesn’t explode, it’s not done yet.” — Lab Man NIE
-</blockquote>
