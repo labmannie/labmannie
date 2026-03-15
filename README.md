@@ -1,640 +1,105 @@
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Space+Grotesk:wght@400;700;900&display=swap');
+<div align="center">
 
-  @keyframes scanline { 0%{top:-10%} 100%{top:110%} }
-  @keyframes glitch1 { 0%,95%{transform:translate(0)} 96%{transform:translate(-3px,1px)} 97%{transform:translate(3px,-1px)} 98%{transform:translate(-2px,2px)} 100%{transform:translate(0)} }
-  @keyframes glitch2 { 0%,90%{opacity:0} 91%,93%{opacity:0.7;transform:translate(4px,0)} 94%{opacity:0} 100%{opacity:0} }
-  @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 2px #39ff14,0 0 18px #39ff1455} 50%{box-shadow:0 0 0 2px #39ff14,0 0 32px #39ff1488} }
-  @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-  @keyframes typewriter { from{width:0} to{width:100%} }
-  @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-  @keyframes shake { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-8deg)} 75%{transform:rotate(8deg)} }
-  @keyframes fill-bar { from{width:0} to{width:var(--w)} }
-  @keyframes flicker { 0%,100%{opacity:1} 48%{opacity:1} 50%{opacity:0.4} 52%{opacity:1} 80%{opacity:1} 82%{opacity:0.6} 84%{opacity:1} }
-  @keyframes matrix-rain { 0%{opacity:0;transform:translateY(-20px)} 10%{opacity:1} 90%{opacity:0.5} 100%{opacity:0;transform:translateY(500px)} }
-  @keyframes slide-in { from{transform:translateX(-30px);opacity:0} to{transform:translateX(0);opacity:1} }
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,20&height=200&section=header&text=LAB%20MAN%20NIE&fontSize=70&fontColor=39FF14&fontAlignY=38&animation=fadeIn&desc=labmannie.github.io%20%7C%20Experimenting%20in%20Prod%20Since%202023&descAlignY=60&descAlign=50&descSize=14" width="100%"/>
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<br/>
 
-  .terminal-root {
-    font-family: 'Fira Code', monospace;
-    background: #0a0c0f;
-    color: #c8d0d8;
-    min-height: 100vh;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
+<!-- VISITOR COUNTER -->
+<img src="https://komarev.com/ghpvc/?username=labmannie&label=LAB+VISITORS&style=for-the-badge&color=brightgreen"/>
 
-  .matrix-bg {
-    position: absolute; inset: 0;
-    overflow: hidden; pointer-events: none; z-index: 0;
-  }
-  .matrix-col {
-    position: absolute; top: 0;
-    font-size: 11px; color: #39ff14;
-    opacity: 0.07; writing-mode: vertical-rl;
-    animation: matrix-rain linear infinite;
-    font-family: 'Fira Code', monospace;
-    white-space: nowrap;
-  }
+<br/><br/>
 
-  .scanline {
-    position: absolute; left: 0; right: 0; height: 3px;
-    background: linear-gradient(transparent, rgba(57,255,20,0.15), transparent);
-    animation: scanline 4s linear infinite;
-    pointer-events: none; z-index: 10;
-  }
+<!-- STATUS BADGES -->
+<img src="https://img.shields.io/badge/Security-Non_Existent-red?style=for-the-badge&logo=hackthebox&logoColor=white"/>
+<img src="https://img.shields.io/badge/Bugs-Features%E2%84%A2-yellow?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Tests-0_(by_choice)-critical?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/OS-Arch_Linux-1793d1?style=for-the-badge&logo=archlinux&logoColor=white"/>
+<img src="https://img.shields.io/badge/Deploy_Target-PROD_(always)-orange?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/NIE-Bangalore-0057A8?style=for-the-badge"/>
 
-  .content { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: 24px 20px 40px; }
+<br/><br/>
 
-  .header {
-    border: 1px solid #39ff1444;
-    background: rgba(57,255,20,0.04);
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 20px;
-    position: relative;
-    animation: pulse-border 3s ease-in-out infinite;
-  }
-  .header::before {
-    content: ""; position: absolute; inset: 0; border-radius: 4px;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57,255,20,0.015) 2px, rgba(57,255,20,0.015) 4px);
-    pointer-events: none;
-  }
-  .header-top { display: flex; align-items: flex-start; gap: 20px; }
-  .avatar-zone { flex-shrink: 0; position: relative; }
-  .avatar {
-    width: 80px; height: 80px; border-radius: 50%;
-    border: 2px solid #39ff14;
-    background: #0d1a0d;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px;
-    animation: float 3s ease-in-out infinite, pulse-border 3s ease-in-out infinite;
-    position: relative; overflow: hidden;
-  }
-  .avatar-glitch {
-    position: absolute; inset: 0; border-radius: 50%;
-    background: linear-gradient(135deg, #39ff1422, transparent 60%);
-    animation: glitch2 5s linear infinite;
-  }
-  .status-dot {
-    position: absolute; bottom: 3px; right: 3px;
-    width: 14px; height: 14px; border-radius: 50%;
-    background: #39ff14; border: 2px solid #0a0c0f;
-    animation: blink 1s step-end infinite;
-  }
-  .header-meta { flex: 1; min-width: 0; }
-  .codename {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 28px; font-weight: 900;
-    color: #39ff14;
-    letter-spacing: -0.5px;
-    animation: glitch1 6s ease-in-out infinite;
-    line-height: 1;
-  }
-  .codename-glitch {
-    position: relative; display: inline-block;
-  }
-  .codename-glitch::after {
-    content: attr(data-text);
-    position: absolute; left: 0; top: 0;
-    color: #ff003c;
-    clip-path: inset(40% 0 50% 0);
-    animation: glitch2 3.5s linear infinite;
-  }
-  .handle { color: #4a5568; font-size: 13px; margin-top: 4px; }
-  .handle a { color: #39ff14; text-decoration: none; opacity: 0.7; }
-  .tagline {
-    margin-top: 10px; font-size: 13px; color: #8892a0;
-    font-style: italic;
-    border-left: 2px solid #39ff1444; padding-left: 10px;
-  }
-  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .badge {
-    font-size: 10px; font-family: 'Fira Code', monospace;
-    padding: 3px 10px; border-radius: 2px;
-    font-weight: 700; letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .badge-green  { background: #0d2d0d; color: #39ff14; border: 1px solid #39ff1444; }
-  .badge-red    { background: #2d0d0d; color: #ff4444; border: 1px solid #ff444433; }
-  .badge-yellow { background: #2d2600; color: #ffd700; border: 1px solid #ffd70033; }
-  .badge-blue   { background: #0d1a2d; color: #4d9de0; border: 1px solid #4d9de033; }
-  .badge-pink   { background: #2d0d1a; color: #ff69b4; border: 1px solid #ff69b433; }
+---
 
-  .terminal-prompt {
-    margin-top: 16px; background: #060809;
-    border: 1px solid #1a2020; border-radius: 3px;
-    padding: 12px 14px; font-size: 12px;
-  }
-  .prompt-line { display: flex; align-items: center; gap: 6px; }
-  .ps1 { color: #39ff14; white-space: nowrap; }
-  .cmd { color: #c8d0d8; }
-  .cursor { display: inline-block; width: 8px; height: 14px; background: #39ff14; animation: blink 1s step-end infinite; vertical-align: middle; }
-  .output { color: #4a9f5e; font-size: 11px; margin-top: 6px; padding-left: 0; }
-  .err { color: #ff4444; }
+## 🧪 `labmannie@NIE:~$ ./enter_the_lab.sh`
 
-  .box {
-    border: 1px solid #1e2830;
-    background: rgba(255,255,255,0.015);
-    border-radius: 4px; margin-bottom: 16px; overflow: hidden;
-  }
-  .box-header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 14px;
-    background: rgba(57,255,20,0.04);
-    border-bottom: 1px solid #1e2830;
-    font-size: 11px; color: #39ff14; letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; user-select: none;
-  }
-  .box-header:hover { background: rgba(57,255,20,0.08); }
-  .box-icon { font-size: 14px; }
-  .box-body { padding: 14px; }
-  .collapsed .box-body { display: none; }
-  .chevron { margin-left: auto; transition: transform 0.2s; }
-  .collapsed .chevron { transform: rotate(-90deg); }
+<br/>
 
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .about-row { display: flex; gap: 8px; align-items: baseline; }
-  .about-key { color: #4a5568; font-size: 11px; white-space: nowrap; }
-  .about-val { color: #c8d0d8; font-size: 12px; }
-  .about-val.blink-green { color: #39ff14; animation: blink 2s step-end infinite; }
+<!-- THE BIG BUTTON -->
+<a href="https://labmannie.github.io/labmannie" target="_blank">
+  <img src="https://img.shields.io/badge/🚀%20ENTER%20THE%20CHAOS%20LAB-39FF14?style=for-the-badge&logoColor=black&labelColor=0a0c0f&color=39FF14" height="50"/>
+</a>
 
-  .warning-box {
-    background: #1a1000; border: 1px solid #ffd70033;
-    border-left: 3px solid #ffd700;
-    border-radius: 2px; padding: 8px 12px;
-    font-size: 11px; color: #ffd700; margin-bottom: 12px;
-  }
+<br/><br/>
 
-  .tech-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tech-pill {
-    font-family: 'Fira Code', monospace;
-    font-size: 11px; padding: 4px 12px; border-radius: 2px;
-    border: 1px solid; cursor: default;
-    transition: all 0.15s;
-    position: relative; overflow: hidden;
-  }
-  .tech-pill:hover { transform: translateY(-2px); filter: brightness(1.3); }
-  .tech-pill::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
-  }
-  .tp-py   { background: #1a1a00; color: #ffd700; border-color: #ffd70033; }
-  .tp-c    { background: #001a1a; color: #4d9de0; border-color: #4d9de033; }
-  .tp-ts   { background: #001020; color: #007acc; border-color: #007acc33; }
-  .tp-js   { background: #1a1600; color: #f0db4f; border-color: #f0db4f33; }
-  .tp-html { background: #1a0800; color: #e34c26; border-color: #e34c2633; }
-  .tp-css  { background: #00081a; color: #264de4; border-color: #264de433; }
-  .tp-dj   { background: #001a08; color: #44b78b; border-color: #44b78b33; }
-  .tp-react{ background: #00101a; color: #61dafb; border-color: #61dafb33; }
-  .tp-git  { background: #1a0800; color: #f05032; border-color: #f0503233; }
-  .tp-linux{ background: #0a0a00; color: #ffd700; border-color: #ffd70044; }
-  .tp-docker{background: #00101a; color: #2496ed; border-color: #2496ed33; }
-  .tp-mysql{ background: #001008; color: #4479a1; border-color: #4479a133; }
-  .tp-vsc  { background: #000a1a; color: #007acc; border-color: #007acc33; }
-  .tp-stl  { background: #1a0010; color: #ff4b4b; border-color: #ff4b4b33; }
+> Click above for the **full interactive experience** — matrix rain, glitch effects, animated terminal, meme generator & more.
+> 
+> *(Because GitHub stripped my JavaScript and I'm not okay about it)*
 
-  .exp-table { width: 100%; font-size: 12px; border-collapse: collapse; }
-  .exp-table th { color: #4a5568; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid #1e2830; text-align: left; }
-  .exp-table td { padding: 8px 8px; border-bottom: 1px solid #0f1518; vertical-align: middle; }
-  .exp-table tr:last-child td { border-bottom: none; }
-  .exp-table tr:hover td { background: rgba(57,255,20,0.03); }
-  .exp-link { color: #39ff14; text-decoration: none; font-weight: 700; }
-  .exp-link:hover { text-decoration: underline; }
-  .stab { font-size: 11px; padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-  .stab-ok   { background: #0d2d0d; color: #39ff14; }
-  .stab-new  { background: #001a2d; color: #4d9de0; }
-  .stab-warn { background: #2d2200; color: #ffd700; }
-  .stab-crit { background: #2d0d0d; color: #ff4444; animation: flicker 3s infinite; }
-  .stab-pain { background: #150a2d; color: #a78bfa; }
-  .stab-ai   { background: #001a10; color: #39ff14; }
+<br/>
 
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .stat-card {
-    background: #060809; border: 1px solid #1e2830; border-radius: 3px;
-    padding: 12px; text-align: center;
-  }
-  .stat-card:hover { border-color: #39ff1444; }
-  .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 900; color: #39ff14; }
-  .stat-label { font-size: 10px; color: #4a5568; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+---
 
-  .skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .skill-name { width: 80px; font-size: 11px; color: #8892a0; flex-shrink: 0; }
-  .skill-bar-bg { flex: 1; height: 6px; background: #0f1518; border-radius: 2px; overflow: hidden; }
-  .skill-bar {
-    height: 100%; border-radius: 2px;
-    animation: fill-bar 1.5s cubic-bezier(.4,0,.2,1) forwards;
-    width: 0;
-  }
-  .skill-pct { width: 32px; font-size: 10px; color: #4a5568; text-align: right; }
-
-  .meme-zone {
-    background: linear-gradient(135deg, #0a0c0f 0%, #060809 100%);
-    border: 1px dashed #39ff1422; border-radius: 4px;
-    padding: 16px; text-align: center;
-  }
-  .meme-ascii { color: #39ff14; font-size: 9px; line-height: 1.3; opacity: 0.7; }
-  .meme-text { font-size: 14px; color: #c8d0d8; margin-top: 12px; }
-
-  .commit-grid { display: flex; flex-wrap: wrap; gap: 3px; }
-  .commit-day {
-    width: 12px; height: 12px; border-radius: 1px;
-    transition: transform 0.1s;
-    cursor: default;
-  }
-  .commit-day:hover { transform: scale(1.4); }
-  .c0 { background: #0f1518; }
-  .c1 { background: #0d2d0d; }
-  .c2 { background: #1a5c1a; }
-  .c3 { background: #2db32d; }
-  .c4 { background: #39ff14; }
-
-  .footer {
-    text-align: center; padding: 20px;
-    border-top: 1px solid #0f1518;
-    margin-top: 24px;
-  }
-  .footer-quote { font-size: 12px; color: #4a5568; font-style: italic; }
-  .footer-end { color: #39ff14; font-size: 11px; margin-top: 6px; }
-
-  .ticker {
-    background: #060809; border: 1px solid #1e2830;
-    border-radius: 3px; padding: 8px 14px;
-    font-size: 11px; color: #4a9f5e; margin-bottom: 16px;
-    position: relative; overflow: hidden;
-  }
-  .ticker::before {
-    content: "// HOT TAKE: ";
-    color: #39ff14; font-weight: 700;
-  }
-
-  .uptime-bar { display: flex; gap: 2px; margin-top: 8px; }
-  .uptime-seg { height: 20px; flex: 1; border-radius: 1px; cursor: default; transition: opacity 0.1s; }
-  .uptime-seg:hover { opacity: 0.7; }
-
-  .divider { border: none; border-top: 1px solid #0f1518; margin: 14px 0; }
-
-  @media(max-width:500px) {
-    .about-grid { grid-template-columns: 1fr; }
-    .stats-grid { grid-template-columns: repeat(2,1fr); }
-    .header-top { flex-direction: column; }
-  }
-</style>
-
-<div class="terminal-root">
-  <div class="matrix-bg" id="matrixBg"></div>
-  <div class="scanline"></div>
-
-  <div class="content">
-
-    <!-- HEADER -->
-    <div class="header">
-      <div class="header-top">
-        <div class="avatar-zone">
-          <div class="avatar">
-            🧪
-            <div class="avatar-glitch"></div>
-          </div>
-          <div class="status-dot" title="Online (allegedly)"></div>
-        </div>
-        <div class="header-meta">
-          <div class="codename">
-            <span class="codename-glitch" data-text="LAB MAN NIE">LAB MAN NIE</span>
-          </div>
-          <div class="handle">@labmannie &nbsp;·&nbsp; <a href="https://github.com/labmannie" target="_blank">github.com/labmannie</a></div>
-          <div class="tagline">"It works on my machine." — Ancient Proverb</div>
-          <div class="badges">
-            <span class="badge badge-green">☕ 90% Caffeine</span>
-            <span class="badge badge-red">🔒 Security: None</span>
-            <span class="badge badge-yellow">🐛 Bugs = Features™</span>
-            <span class="badge badge-blue">🐧 Arch Linux BTW</span>
-            <span class="badge badge-pink">🧠 NIE Labs</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="terminal-prompt">
-        <div class="prompt-line">
-          <span class="ps1">labmannie@NIE:~$</span>
-          <span class="cmd">whoami</span>
-          <span class="cursor"></span>
-        </div>
-        <div class="output">
-          &gt; Role: Breaking things so you don't have to<br>
-          &gt; Location: 127.0.0.1 (Localhost, Bangalore)<br>
-          &gt; Current mission: <span style="color:#ffd700">Trying to center a div (day 47)</span><br>
-          &gt; Stack Overflow tabs open: <span class="err">23</span><br>
-          &gt; Last deploy: <span style="color:#ff4444">PROD ⚠️ (no tests, YOLO)</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TICKER -->
-    <div class="ticker" id="ticker">Segfaults are just the OS telling you it cares.</div>
-
-    <!-- ABOUT -->
-    <div class="box" id="boxAbout">
-      <div class="box-header" onclick="toggleBox('boxAbout')">
-        <span class="box-icon">🔬</span>
-        <span>SUBJECT_INFO.txt</span>
-        <span class="chevron">▼</span>
-      </div>
-      <div class="box-body">
-        <div class="warning-box">⚠️ WARNING: Operates on 90% caffeine and 10% Stack Overflow copy-paste. Side effects include 3am commits and "it worked yesterday" syndrome.</div>
-        <div class="about-grid">
-          <div class="about-row"><span class="about-key">CODENAME:</span><span class="about-val">Lab Man NIE</span></div>
-          <div class="about-row"><span class="about-key">LOCATION:</span><span class="about-val">127.0.0.1</span></div>
-          <div class="about-row"><span class="about-key">INSTITUTE:</span><span class="about-val">NIE, Bangalore</span></div>
-          <div class="about-row"><span class="about-key">STATUS:</span><span class="about-val blink-green">● ONLINE</span></div>
-          <div class="about-row"><span class="about-key">FUEL:</span><span class="about-val">☕☕☕☕</span></div>
-          <div class="about-row"><span class="about-key">TESTS:</span><span class="about-val" style="color:#ff4444">0 (by choice)</span></div>
-          <div class="about-row"><span class="about-key">PROD DEPLOYS:</span><span class="about-val">Too many</span></div>
-          <div class="about-row"><span class="about-key">THERAPY:</span><span class="about-val">src.needed</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TECH STACK -->
-    <div class="box" id="boxStack">
-      <div class="box-header" onclick="toggleBox('boxStack')">
-        <span class="box-icon">🛠️</span>
-        <span>TOOLKIT.sh — The Weapons of Mass Semicolons</span>
-        <span class="chevron">▼</span>
-      </div>
-      <div class="box-body">
-        <div class="tech-grid">
-          <span class="tech-pill tp-py">🐍 Python</span>
-          <span class="tech-pill tp-c">⚡ C</span>
-          <span class="tech-pill tp-ts">🔷 TypeScript</span>
-          <span class="tech-pill tp-js">🟡 JavaScript</span>
-          <span class="tech-pill tp-html">🔶 HTML5</span>
-          <span class="tech-pill tp-css">🎨 CSS3</span>
-          <span class="tech-pill tp-dj">🎸 Django</span>
-          <span class="tech-pill tp-react">⚛️ React</span>
-          <span class="tech-pill tp-stl">📊 Streamlit</span>
-          <span class="tech-pill tp-git">🔥 Git</span>
-          <span class="tech-pill tp-linux">🐧 Linux</span>
-          <span class="tech-pill tp-docker">🐳 Docker</span>
-          <span class="tech-pill tp-mysql">🗄️ MySQL</span>
-          <span class="tech-pill tp-vsc">💙 VSCode</span>
-        </div>
-        <hr class="divider" style="margin-top:14px"/>
-        <div style="font-size:11px;color:#4a5568;margin-top:4px">Proficiency levels (self-reported, take with 🧂)</div>
-        <div style="margin-top:10px">
-          <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:82%;background:#ffd700"></div></div><span class="skill-pct">82%</span></div>
-          <div class="skill-row"><span class="skill-name">Django</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:70%;background:#44b78b"></div></div><span class="skill-pct">70%</span></div>
-          <div class="skill-row"><span class="skill-name">JS</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:60%;background:#f0db4f"></div></div><span class="skill-pct">60%</span></div>
-          <div class="skill-row"><span class="skill-name">C</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:45%;background:#4d9de0"></div></div><span class="skill-pct">45%</span></div>
-          <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:35%;background:#007acc"></div></div><span class="skill-pct">35%</span></div>
-          <div class="skill-row"><span class="skill-name">Centering divs</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:3%;background:#ff4444"></div></div><span class="skill-pct">3%</span></div>
-          <div class="skill-row"><span class="skill-name">Writing tests</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:0%;background:#ff4444"></div></div><span class="skill-pct">0%</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXPERIMENTS — ALL 8 REPOS -->
-    <div class="box" id="boxExp">
-      <div class="box-header" onclick="toggleBox('boxExp')">
-        <span class="box-icon">📦</span>
-        <span>EXPERIMENTS.log — Classified Repos</span>
-        <span class="chevron">▼</span>
-      </div>
-      <div class="box-body">
-        <table class="exp-table">
-          <thead>
-            <tr>
-              <th>Experiment</th>
-              <th>Description</th>
-              <th>Stability</th>
-              <th>Threat Lvl</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/nvme-smart-failure-analytics" target="_blank">nvme-smart-failure-analytics</a></td>
-              <td style="color:#8892a0;font-size:11px">NVMe SMART telemetry + predictive failure modeling. Your SSD has secrets. This repo spills them.</td>
-              <td><span class="stab stab-ai">🔬 Actually Works™</span></td>
-              <td style="color:#39ff14;font-size:11px">LOW (unless ur SSD is dying)</td>
-            </tr>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/NIESync" target="_blank">NIESync</a></td>
-              <td style="color:#8892a0;font-size:11px">Syncing NIE! TypeScript entered the chat. Type safety: optional. Chaos: mandatory.</td>
-              <td><span class="stab stab-new">🔄 Actively Syncing</span></td>
-              <td style="color:#4d9de0;font-size:11px">MEDIUM (WiFi dependent)</td>
-            </tr>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/AI_Lab" target="_blank">AI_Lab</a></td>
-              <td style="color:#8892a0;font-size:11px">All Lab programs. Where AI meets "does this even run?" energy. The future has import errors.</td>
-              <td><span class="stab stab-ai">🧠 Evolving</span></td>
-              <td style="color:#39ff14;font-size:11px">MEDIUM (sentient?)</td>
-            </tr>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/students-django" target="_blank">students-django</a></td>
-              <td style="color:#8892a0;font-size:11px">NIE students tracked in 4K Ultra HD. Privacy? Never heard of her.</td>
-              <td><span class="stab stab-ok">✅ Stable-ish</span></td>
-              <td style="color:#39ff14;font-size:11px">LOW</td>
-            </tr>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/django-calc" target="_blank">django-calc</a></td>
-              <td style="color:#8892a0;font-size:11px">Computes 2+2=5 occasionally. Einstein approved.</td>
-              <td><span class="stab stab-warn">⚠️ Volatile</span></td>
-              <td style="color:#ffd700;font-size:11px">MEDIUM</td>
-            </tr>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/capstone" target="_blank">capstone</a></td>
-              <td style="color:#8892a0;font-size:11px">Capstone SDP. The final boss. No cheat codes. No Stack Overflow. Godspeed.</td>
-              <td><span class="stab stab-crit">🔥 CRITICAL</span></td>
-              <td style="color:#ff4444;font-size:11px;animation:blink 1s step-end infinite">🚨 DEFCON 1</td>
-            </tr>
-            <tr>
-              <td><a class="exp-link" href="https://github.com/labmannie/DSA_project" target="_blank">DSA_project</a></td>
-              <td style="color:#8892a0;font-size:11px">Task Master in C. Data Structures & Anxiety. The pointer made me cry.</td>
-              <td><span class="stab stab-pain">🧠 Painful</span></td>
-              <td style="color:#a78bfa;font-size:11px">EXISTENTIAL</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- STATS -->
-    <div class="box" id="boxStats">
-      <div class="box-header" onclick="toggleBox('boxStats')">
-        <span class="box-icon">📊</span>
-        <span>LAB_METRICS.dat — Numbers Go Brrr</span>
-        <span class="chevron">▼</span>
-      </div>
-      <div class="box-body">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-num" id="commits">0</div>
-            <div class="stat-label">COMMITS (all bugfixes)</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="issues">0</div>
-            <div class="stat-label">ISSUES CREATED BY SELF</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="tabs">0</div>
-            <div class="stat-label">BROWSER TABS OPEN</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="coffees">0</div>
-            <div class="stat-label">COFFEES TODAY</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="stackoverflow">0</div>
-            <div class="stat-label">SO VISITS / DAY</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="sleephrs">0</div>
-            <div class="stat-label">SLEEP HOURS / NIGHT</div>
-          </div>
-        </div>
-        <hr class="divider"/>
-        <div style="font-size:10px;color:#4a5568;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase">Contribution Graph (reconstructed from memory)</div>
-        <div class="commit-grid" id="commitGrid"></div>
-        <div style="display:flex;gap:8px;margin-top:8px;align-items:center;font-size:10px;color:#4a5568">
-          <span>Less</span>
-          <div class="commit-day c0" style="width:10px;height:10px"></div>
-          <div class="commit-day c1" style="width:10px;height:10px"></div>
-          <div class="commit-day c2" style="width:10px;height:10px"></div>
-          <div class="commit-day c3" style="width:10px;height:10px"></div>
-          <div class="commit-day c4" style="width:10px;height:10px"></div>
-          <span>More</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- DAILY DOPAMINE -->
-    <div class="box" id="boxMeme">
-      <div class="box-header" onclick="toggleBox('boxMeme')">
-        <span class="box-icon">🎭</span>
-        <span>DAILY_DOPAMINE.exe — Meme-ory Leak</span>
-        <span class="chevron">▼</span>
-      </div>
-      <div class="box-body">
-        <div class="meme-zone">
-          <pre class="meme-ascii" id="memeAscii">  ( •_•)
-  ( •_•)>⌐■-■
-  (⌐■-■)</pre>
-          <div class="meme-text" id="memeText">Loading the dankest meme from the heap...</div>
-          <div style="margin-top:12px">
-            <button onclick="nextMeme()" style="font-family:'Fira Code',monospace;font-size:11px;padding:6px 16px;background:#0d2d0d;color:#39ff14;border:1px solid #39ff1444;border-radius:2px;cursor:pointer;letter-spacing:1px">[ NEXT_MEME.sh ]</button>
-          </div>
-        </div>
-        <hr class="divider"/>
-        <div style="font-size:10px;color:#4a5568;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Uptime (mood) — last 30 days</div>
-        <div class="uptime-bar" id="uptimeBar"></div>
-        <div style="display:flex;gap:14px;margin-top:6px;font-size:10px">
-          <span style="color:#39ff14">■ Vibing</span>
-          <span style="color:#ffd700">■ Debugging</span>
-          <span style="color:#ff4444">■ Crying at compiler</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-      <div class="footer-quote">"I don't always test my code, but when I do, I do it in production."</div>
-      <div class="footer-end" style="margin-top:8px;font-size:12px">
-        Experimenting in Prod Since 2023 &nbsp;·&nbsp;
-        <span style="animation:blink 1.5s step-end infinite;display:inline-block">▌</span>
-        &nbsp;End of Line.
-      </div>
-      <div style="font-size:10px;color:#1e2830;margin-top:12px">
-        Last updated: right before a deployment. No backups. 🙏
-      </div>
-    </div>
-
-  </div>
 </div>
 
-<script>
-const jokes = [
-  "Segfaults are just the OS telling you it cares.",
-  "My code doesn't have bugs. It has random features.",
-  "rm -rf node_modules is self-care.",
-  "It's not a bug, it's a feature nobody asked for.",
-  "Compiling... jk, I use Python. Crying instead.",
-  "git blame: it's always the previous me.",
-  "The real bugs were the friends we made along the way.",
-  "sudo make me a sandwich. — last words before Makefile exploded.",
-  "CSS: the art of crying in 3 browsers at once.",
-  "Stackoverflow is just autocomplete for thoughts.",
-];
-let jokeIdx = 0;
-setInterval(()=>{ document.getElementById('ticker').textContent = jokes[jokeIdx++ % jokes.length]; }, 4000);
+```
+labmannie@NIE:~$ whoami
+> Role      : Breaking things so you don't have to
+> Location  : 127.0.0.1 (Localhost, Bangalore)  
+> Institute : NIE, Bangalore 🏛️
+> Mission   : Trying to center a div (day 312)
+> Fuel      : ☕☕☕☕ [CRITICAL]
+> Tests     : 0 (by design, not accident)
+> Motto     : "It works on my machine." — Ancient Proverb
+```
 
-const memes = [
-  { ascii: `  ( •_•)\n  ( •_•)>⌐■-■\n  (⌐■-■)`, text: "When the code works on the first try and you don't know why." },
-  { ascii: `  (╯°□°）╯︵ ┻━┻`, text: "Me after spending 3 hours on a missing semicolon." },
-  { ascii: `  ┬─┬ノ( º _ ºノ)`, text: "...okay let me put the table back. I need it." },
-  { ascii: `   ¯\\_(ツ)_/¯`, text: "Pushed to main. Works? Ships. Doesn't? Also ships." },
-  { ascii: `  (•_•) <( it works)\n  ( •_•) <( on my machine)\n  (•_•) <( ship it then)`, text: "The DevOps pipeline in its natural habitat." },
-  { ascii: `  👁️ 📄 👁️\n     👄`, text: "Reading my own code 2 weeks later." },
-  { ascii: `  [████████████ ] 99%\n  [■            ] Install Tests`, text: "Accurate representation of every project." },
-  { ascii: `  try {\n    /* TODO */\n  } catch(e) {\n    console.log('🙏')\n  }`, text: "Professional error handling in the wild." },
-];
-let memeIdx = 0;
-function nextMeme(){
-  memeIdx = (memeIdx+1)%memes.length;
-  document.getElementById('memeAscii').textContent = memes[memeIdx].ascii;
-  document.getElementById('memeText').textContent = memes[memeIdx].text;
-}
-document.getElementById('memeText').textContent = memes[0].text;
+---
 
-function toggleBox(id){
-  document.getElementById(id).classList.toggle('collapsed');
-}
+## 🛠️ Tech Stack
 
-const targets = { commits:847, issues:312, tabs:34, coffees:7, stackoverflow:47, sleephrs:4 };
-Object.entries(targets).forEach(([k,v])=>{
-  const el = document.getElementById(k);
-  let n=0; const step = Math.ceil(v/40);
-  const iv = setInterval(()=>{
-    n = Math.min(n+step, v);
-    el.textContent = n;
-    if(n>=v) clearInterval(iv);
-  }, 30);
-});
+<div align="center">
+<a href="https://skillicons.dev">
+  <img src="https://skillicons.dev/icons?i=py,c,ts,js,html,css,django,react,git,linux,docker,mysql,vscode&theme=dark&perline=7"/>
+</a>
+</div>
 
-const grid = document.getElementById('commitGrid');
-const distribution = [0,0,0,0,1,1,1,2,2,2,3,3,4];
-for(let i=0;i<280;i++){
-  const d = document.createElement('div');
-  const c = distribution[Math.floor(Math.random()*distribution.length)];
-  d.className = `commit-day c${c}`;
-  if(c>0) d.title = `${c*3} commit${c>1?'s':''} (probably all bugfixes)`;
-  grid.appendChild(d);
-}
+---
 
-const uptime = document.getElementById('uptimeBar');
-const moods = ['#39ff14','#39ff14','#ffd700','#39ff14','#ff4444','#ffd700','#39ff14','#39ff14','#ffd700','#39ff14'];
-for(let i=0;i<30;i++){
-  const s = document.createElement('div');
-  s.className='uptime-seg';
-  s.style.background = moods[i%moods.length];
-  s.style.opacity='0.8';
-  s.title = i%5===2?'Debugging (major incident)':i%7===4?'Crying at compiler':'Vibing';
-  uptime.appendChild(s);
-}
+## 📦 Experiments — *Classified Lab Reports*
 
-const bg = document.getElementById('matrixBg');
-const chars = '01アイウエオカキクケコ<>/{}[];:ラリルレロ';
-for(let i=0;i<20;i++){
-  const col = document.createElement('div');
-  col.className='matrix-col';
-  col.style.left = (Math.random()*100)+'%';
-  col.style.animationDuration = (6+Math.random()*12)+'s';
-  col.style.animationDelay = (Math.random()*8)+'s';
-  col.style.fontSize = (9+Math.floor(Math.random()*5))+'px';
-  let txt='';
-  for(let j=0;j<40;j++) txt+=chars[Math.floor(Math.random()*chars.length)];
-  col.textContent=txt;
-  bg.appendChild(col);
-}
-</script>
+| 🧪 Repo | 📋 What it does | ⚠️ Stability |
+|:---|:---|:---:|
+| [**nvme-smart-failure-analytics**](https://github.com/labmannie/nvme-smart-failure-analytics) | NVMe SMART telemetry + predictive failure modeling. Your SSD has secrets. | 🔬 Actually Works™ |
+| [**NIESync**](https://github.com/labmannie/NIESync) | Syncing NIE! TypeScript entered the chat. Type safety: optional. | 🔄 Actively Syncing |
+| [**AI_Lab**](https://github.com/labmannie/AI_Lab) | All Lab programs. Where AI meets "does this even run?" energy. | 🧠 Evolving |
+| [**students-django**](https://github.com/labmannie/students-django) | NIE students tracked in 4K Ultra HD. Privacy? Never heard of her. | ✅ Stable-ish |
+| [**django-calc**](https://github.com/labmannie/django-calc) | Computes 2+2=5 occasionally. Einstein approved. | ⚠️ Volatile |
+| [**capstone**](https://github.com/labmannie/capstone) | The final boss. No cheat codes. No Stack Overflow. Godspeed. | 🔥 CRITICAL |
+| [**DSA_project**](https://github.com/labmannie/DSA_project) | Task Master in C. Data Structures & Anxiety. The pointer made me cry. | 🧠 Painful |
+
+---
+
+## 📊 Lab Metrics
+
+<div align="center">
+
+<img src="https://github-readme-stats.vercel.app/api?username=labmannie&show_icons=true&theme=radical&hide_border=true&bg_color=0d1117&count_private=true&include_all_commits=true" height="160"/>
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=labmannie&layout=compact&theme=radical&hide_border=true&bg_color=0d1117&langs_count=8" height="160"/>
+
+<br/>
+
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=labmannie&theme=radical&hide_border=true&background=0d1117&ring=39FF14&fire=FF4500&currStreakLabel=39FF14" width="600"/>
+
+</div>
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,20&height=100&section=footer&fontColor=39FF14" width="100%"/>
+
+*"I don't always test my code, but when I do, I do it in production."*
+
+**End of Line. 🖥️**
+
+</div>
