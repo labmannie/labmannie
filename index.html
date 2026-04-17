@@ -1,524 +1,652 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lab Man NIE — Chaos Edition v3.0</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>"/>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Space+Grotesk:wght@400;700;900&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAB MAN NIE | Experimenting in Prod</title>
+    <style>
+        /* --- CORE CHAOS VARIABLES --- */
+        :root {
+            --bg-color: #0d1117;
+            --main-green: #39FF14; /* Matrix Neon */
+            --dark-green: #0a3d0a;
+            --error-red: #ff3333;
+            --warn-yellow: #ffcc00;
+            --prod-orange: #ff9900;
+            --nie-blue: #0057A8;
+            --text-color: #e6edf3;
+            --font-stack: 'Courier New', Courier, monospace;
+            --glitch-width: 100%;
+            --glitch-height: 100vh;
+        }
 
-    @keyframes scanline { 0%{top:-10%} 100%{top:110%} }
-    @keyframes glitch1 { 0%,95%{transform:translate(0)} 96%{transform:translate(-3px,1px)} 97%{transform:translate(3px,-1px)} 98%{transform:translate(-2px,2px)} 100%{transform:translate(0)} }
-    @keyframes glitch2 { 0%,90%{opacity:0} 91%,93%{opacity:0.7;transform:translate(4px,0)} 94%{opacity:0} 100%{opacity:0} }
-    @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 2px #39ff14,0 0 18px #39ff1455} 50%{box-shadow:0 0 0 2px #39ff14,0 0 32px #39ff1488} }
-    @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-    @keyframes fill-bar { from{width:0} to{width:var(--w)} }
-    @keyframes flicker { 0%,100%{opacity:1} 48%{opacity:1} 50%{opacity:0.4} 52%{opacity:1} 80%{opacity:1} 82%{opacity:0.6} 84%{opacity:1} }
-    @keyframes matrix-rain { 0%{opacity:0;transform:translateY(-20px)} 10%{opacity:1} 90%{opacity:0.5} 100%{opacity:0;transform:translateY(500px)} }
-    @keyframes shake { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-8deg)} 75%{transform:rotate(8deg)} }
+        /* --- RESET & BASIC STYLING --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            cursor: none; /* Hide default cursor for custom one */
+        }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            overflow-x: hidden;
+            line-height: 1.6;
+            font-size: 16px;
+        }
 
-    html, body {
-      font-family: 'Fira Code', monospace;
-      background: #0a0c0f;
-      color: #c8d0d8;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+        a {
+            color: var(--main-green);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
 
-    .matrix-bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-    .matrix-col {
-      position: absolute; top: 0;
-      font-size: 11px; color: #39ff14;
-      opacity: 0.07; writing-mode: vertical-rl;
-      animation: matrix-rain linear infinite;
-      white-space: nowrap;
-    }
-    .scanline {
-      position: fixed; left: 0; right: 0; height: 3px;
-      background: linear-gradient(transparent, rgba(57,255,20,0.15), transparent);
-      animation: scanline 4s linear infinite;
-      pointer-events: none; z-index: 100;
-    }
+        a:hover {
+            background-color: var(--main-green);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--main-green);
+        }
 
-    .content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 24px 20px 60px; }
+        ul { list-style: none; }
 
-    /* HEADER */
-    .header {
-      border: 1px solid #39ff1444; background: rgba(57,255,20,0.04);
-      border-radius: 4px; padding: 20px; margin-bottom: 20px;
-      position: relative; animation: pulse-border 3s ease-in-out infinite;
-    }
-    .header::before {
-      content: ""; position: absolute; inset: 0; border-radius: 4px;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57,255,20,0.015) 2px, rgba(57,255,20,0.015) 4px);
-      pointer-events: none;
-    }
-    .header-top { display: flex; align-items: flex-start; gap: 20px; }
-    .avatar-zone { flex-shrink: 0; position: relative; }
-    .avatar {
-      width: 80px; height: 80px; border-radius: 50%;
-      border: 2px solid #39ff14; background: #0d1a0d;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
-      animation: float 3s ease-in-out infinite, pulse-border 3s ease-in-out infinite;
-      position: relative; overflow: hidden;
-    }
-    .avatar-glitch {
-      position: absolute; inset: 0; border-radius: 50%;
-      background: linear-gradient(135deg, #39ff1422, transparent 60%);
-      animation: glitch2 5s linear infinite;
-    }
-    .status-dot {
-      position: absolute; bottom: 3px; right: 3px;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: #39ff14; border: 2px solid #0a0c0f;
-      animation: blink 1s step-end infinite;
-    }
-    .header-meta { flex: 1; min-width: 0; }
-    .codename {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 28px; font-weight: 900; color: #39ff14;
-      letter-spacing: -0.5px; animation: glitch1 6s ease-in-out infinite; line-height: 1;
-    }
-    .codename-glitch { position: relative; display: inline-block; }
-    .codename-glitch::after {
-      content: attr(data-text); position: absolute; left: 0; top: 0;
-      color: #ff003c; clip-path: inset(40% 0 50% 0); animation: glitch2 3.5s linear infinite;
-    }
-    .handle { color: #4a5568; font-size: 13px; margin-top: 4px; }
-    .handle a { color: #39ff14; text-decoration: none; opacity: 0.7; }
-    .handle a:hover { opacity: 1; text-decoration: underline; }
-    .tagline { margin-top: 10px; font-size: 13px; color: #8892a0; font-style: italic; border-left: 2px solid #39ff1444; padding-left: 10px; }
-    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .badge { font-size: 10px; padding: 3px 10px; border-radius: 2px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-    .badge-green  { background: #0d2d0d; color: #39ff14; border: 1px solid #39ff1444; }
-    .badge-red    { background: #2d0d0d; color: #ff4444; border: 1px solid #ff444433; }
-    .badge-yellow { background: #2d2600; color: #ffd700; border: 1px solid #ffd70033; }
-    .badge-blue   { background: #0d1a2d; color: #4d9de0; border: 1px solid #4d9de033; }
-    .badge-pink   { background: #2d0d1a; color: #ff69b4; border: 1px solid #ff69b433; }
+        /* --- CUSTOM CURSOR (The Chaos Trail) --- */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--main-green);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease, background 0.2s ease;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--main-green);
+        }
 
-    .terminal-prompt {
-      margin-top: 16px; background: #060809;
-      border: 1px solid #1a2020; border-radius: 3px; padding: 12px 14px; font-size: 12px;
-    }
-    .prompt-line { display: flex; align-items: center; gap: 6px; }
-    .ps1 { color: #39ff14; white-space: nowrap; }
-    .cursor { display: inline-block; width: 8px; height: 14px; background: #39ff14; animation: blink 1s step-end infinite; vertical-align: middle; }
-    .output { color: #4a9f5e; font-size: 11px; margin-top: 6px; }
-    .err { color: #ff4444; }
+        #cursor.hovering {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: rgba(57, 255, 20, 0.2);
+            border-style: dashed;
+        }
 
-    /* BOXES */
-    .box { border: 1px solid #1e2830; background: rgba(255,255,255,0.015); border-radius: 4px; margin-bottom: 16px; overflow: hidden; }
-    .box-header {
-      display: flex; align-items: center; gap: 10px; padding: 8px 14px;
-      background: rgba(57,255,20,0.04); border-bottom: 1px solid #1e2830;
-      font-size: 11px; color: #39ff14; letter-spacing: 1px; text-transform: uppercase;
-      cursor: pointer; user-select: none;
-    }
-    .box-header:hover { background: rgba(57,255,20,0.08); }
-    .box-body { padding: 14px; }
-    .collapsed .box-body { display: none; }
-    .chevron { margin-left: auto; transition: transform 0.2s; }
-    .collapsed .chevron { transform: rotate(-90deg); }
+        #cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--main-green);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+        }
 
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .about-row { display: flex; gap: 8px; align-items: baseline; }
-    .about-key { color: #4a5568; font-size: 11px; white-space: nowrap; }
-    .about-val { color: #c8d0d8; font-size: 12px; }
-    .about-val.blink-green { color: #39ff14; animation: blink 2s step-end infinite; }
+        /* --- CRT & GLOBAL ANIMATIONS --- */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.15;
+        }
 
-    .warning-box {
-      background: #1a1000; border: 1px solid #ffd70033; border-left: 3px solid #ffd700;
-      border-radius: 2px; padding: 8px 12px; font-size: 11px; color: #ffd700; margin-bottom: 12px;
-    }
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
 
-    .tech-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tech-pill {
-      font-size: 11px; padding: 4px 12px; border-radius: 2px; border: 1px solid;
-      cursor: default; transition: all 0.15s; position: relative; overflow: hidden;
-    }
-    .tech-pill:hover { transform: translateY(-2px); filter: brightness(1.3); }
-    .tech-pill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%); }
-    .tp-py    { background: #1a1a00; color: #ffd700; border-color: #ffd70033; }
-    .tp-c     { background: #001a1a; color: #4d9de0; border-color: #4d9de033; }
-    .tp-ts    { background: #001020; color: #007acc; border-color: #007acc33; }
-    .tp-js    { background: #1a1600; color: #f0db4f; border-color: #f0db4f33; }
-    .tp-html  { background: #1a0800; color: #e34c26; border-color: #e34c2633; }
-    .tp-css   { background: #00081a; color: #264de4; border-color: #264de433; }
-    .tp-dj    { background: #001a08; color: #44b78b; border-color: #44b78b33; }
-    .tp-react { background: #00101a; color: #61dafb; border-color: #61dafb33; }
-    .tp-stl   { background: #1a0010; color: #ff4b4b; border-color: #ff4b4b33; }
-    .tp-git   { background: #1a0800; color: #f05032; border-color: #f0503233; }
-    .tp-linux { background: #0a0a00; color: #ffd700; border-color: #ffd70044; }
-    .tp-docker{ background: #00101a; color: #2496ed; border-color: #2496ed33; }
-    .tp-mysql { background: #001008; color: #4479a1; border-color: #4479a133; }
-    .tp-vsc   { background: #000a1a; color: #007acc; border-color: #007acc33; }
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 10px;
+            background: rgba(57, 255, 20, 0.1);
+            animation: scanline 6s linear infinite;
+            z-index: 9997;
+            pointer-events: none;
+        }
 
-    .skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .skill-name { width: 100px; font-size: 11px; color: #8892a0; flex-shrink: 0; }
-    .skill-bar-bg { flex: 1; height: 6px; background: #0f1518; border-radius: 2px; overflow: hidden; }
-    .skill-bar { height: 100%; border-radius: 2px; animation: fill-bar 1.5s cubic-bezier(.4,0,.2,1) forwards; width: 0; }
-    .skill-pct { width: 32px; font-size: 10px; color: #4a5568; text-align: right; }
+        /* --- NOISE BACKGROUND (Canvas) --- */
+        #noise-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+        }
 
-    .exp-table { width: 100%; font-size: 12px; border-collapse: collapse; }
-    .exp-table th { color: #4a5568; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid #1e2830; text-align: left; }
-    .exp-table td { padding: 8px; border-bottom: 1px solid #0f1518; vertical-align: middle; }
-    .exp-table tr:last-child td { border-bottom: none; }
-    .exp-table tr:hover td { background: rgba(57,255,20,0.03); }
-    .exp-link { color: #39ff14; text-decoration: none; font-weight: 700; }
-    .exp-link:hover { text-decoration: underline; }
-    .stab { font-size: 11px; padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-    .stab-ok   { background: #0d2d0d; color: #39ff14; }
-    .stab-new  { background: #001a2d; color: #4d9de0; }
-    .stab-warn { background: #2d2200; color: #ffd700; }
-    .stab-crit { background: #2d0d0d; color: #ff4444; animation: flicker 3s infinite; }
-    .stab-pain { background: #150a2d; color: #a78bfa; }
-    .stab-ai   { background: #001a10; color: #39ff14; }
+        /* --- LAYOUT & SECTIONS --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .stat-card { background: #060809; border: 1px solid #1e2830; border-radius: 3px; padding: 12px; text-align: center; transition: border-color 0.2s; }
-    .stat-card:hover { border-color: #39ff1444; }
-    .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 900; color: #39ff14; }
-    .stat-label { font-size: 10px; color: #4a5568; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
 
-    .commit-grid { display: flex; flex-wrap: wrap; gap: 3px; }
-    .commit-day { width: 12px; height: 12px; border-radius: 1px; transition: transform 0.1s; cursor: default; }
-    .commit-day:hover { transform: scale(1.4); }
-    .c0{background:#0f1518} .c1{background:#0d2d0d} .c2{background:#1a5c1a} .c3{background:#2db32d} .c4{background:#39ff14}
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    .meme-zone { background: linear-gradient(135deg, #0a0c0f 0%, #060809 100%); border: 1px dashed #39ff1422; border-radius: 4px; padding: 16px; text-align: center; }
-    .meme-ascii { color: #39ff14; font-size: 10px; line-height: 1.4; opacity: 0.8; }
-    .meme-text { font-size: 14px; color: #c8d0d8; margin-top: 12px; }
-    .meme-btn { font-family: 'Fira Code', monospace; font-size: 11px; padding: 6px 16px; background: #0d2d0d; color: #39ff14; border: 1px solid #39ff1444; border-radius: 2px; cursor: pointer; letter-spacing: 1px; margin-top: 12px; transition: background 0.15s; }
-    .meme-btn:hover { background: #1a4a1a; }
+        /* --- HEADER (The Waving Glitch) --- */
+        header {
+            text-align: center;
+            margin-top: 2rem;
+            position: relative;
+        }
 
-    .uptime-bar { display: flex; gap: 2px; margin-top: 8px; }
-    .uptime-seg { height: 20px; flex: 1; border-radius: 1px; cursor: default; transition: opacity 0.1s; }
-    .uptime-seg:hover { opacity: 0.6; }
+        .glitch-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--main-green);
+            letter-spacing: -2px;
+            position: relative;
+            text-transform: uppercase;
+            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                        -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+                        0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            animation: glitch 500ms infinite;
+        }
 
-    .ticker { background: #060809; border: 1px solid #1e2830; border-radius: 3px; padding: 8px 14px; font-size: 11px; color: #4a9f5e; margin-bottom: 16px; }
-    .ticker::before { content: "// HOT TAKE: "; color: #39ff14; font-weight: 700; }
+        .glitch-title span { position: absolute; top: 0; left: 0; }
 
-    .divider { border: none; border-top: 1px solid #0f1518; margin: 14px 0; }
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
+        }
 
-    .footer { text-align: center; padding: 20px; border-top: 1px solid #0f1518; margin-top: 24px; }
-    .footer-quote { font-size: 12px; color: #4a5568; font-style: italic; }
-    .footer-end { color: #39ff14; font-size: 11px; margin-top: 6px; }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--warn-yellow);
+            opacity: 0.8;
+        }
 
-    @media(max-width:500px) {
-      .about-grid { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: repeat(2,1fr); }
-      .header-top { flex-direction: column; }
-      .exp-table th:nth-child(4), .exp-table td:nth-child(4) { display: none; }
-    }
-  </style>
+        /* --- VISITOR COUNTER BADGE --- */
+        .visitor-counter {
+            margin: 1rem 0;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: var(--dark-green);
+            border: 1px solid var(--main-green);
+            color: var(--main-green);
+            font-weight: bold;
+            box-shadow: 0 0 5px var(--main-green);
+        }
+
+        /* --- TERMINAL WINDOW --- */
+        .terminal-window {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-top: 2rem;
+        }
+
+        .terminal-header {
+            background: #222;
+            padding: 8px 15px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: var(--font-stack);
+            font-size: 0.9rem;
+        }
+
+        .cmd { color: var(--main-green); }
+        .output { color: var(--text-color); margin-bottom: 10px; display: block; }
+        .error { color: var(--error-red); }
+        .warn { color: var(--warn-yellow); }
+        .critical { animation: pulse-red 1s infinite; color: var(--error-red); font-weight: bold;}
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; text-shadow: 0 0 5px var(--error-red); }
+            50% { opacity: 0.5; text-shadow: none; }
+        }
+
+        /* --- TECH STACK (Chaos Grid) --- */
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .stack-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(57, 255, 20, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stack-item:hover {
+            border-color: var(--main-green);
+            background: rgba(57, 255, 20, 0.05);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 5px 15px rgba(57, 255, 20, 0.2);
+        }
+
+        /* The "Stunning" part: A rotating shadow effect on hover */
+        .stack-item::before {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            background: linear-gradient(45deg, transparent, rgba(57, 255, 20, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .stack-item:hover::before { transform: translateX(100%); }
+
+        /* --- EXPERIMENTS (Meme Cards) --- */
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) rotate(1deg); /* Slight chaotic rotation */
+            border-color: var(--prod-orange);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .project-card h3 { color: var(--main-green); margin-bottom: 10px; }
+        .project-card p { font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 10px;
+        }
+
+        .stable { background-color: var(--dark-green); color: var(--main-green); }
+        .evolving { background-color: var(--nie-blue); color: white; }
+        .volatile { background-color: var(--warn-yellow); color: black; }
+        .critical-status { background-color: var(--error-red); color: white; animation: shake 0.5s infinite; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px) rotate(-1deg); }
+            75% { transform: translateX(2px) rotate(1deg); }
+        }
+
+        /* --- THE BIG CHAOS BUTTON --- */
+        .chaos-btn-wrap {
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .chaos-btn {
+            font-family: var(--font-stack);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--bg-color);
+            background-color: var(--main-green);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 20px var(--main-green);
+            transition: all 0.3s ease;
+            animation: pulse-green 2s infinite;
+        }
+
+        .chaos-btn:hover {
+            box-shadow: 0 0 40px var(--main-green);
+            letter-spacing: 2px;
+            background-color: white;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 10px var(--main-green); }
+            50% { box-shadow: 0 0 25px var(--main-green), 0 0 10px white; }
+            100% { box-shadow: 0 0 10px var(--main-green); }
+        }
+
+        /* --- THE ACTUAL MAN (Smartkidzee) --- */
+        .real-man-section {
+            background: repeating-linear-gradient(45deg, #111, #111 10px, #0a0a0a 10px, #0a0a0a 20px);
+            border: 2px dashed var(--error-red);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .real-man-section::after {
+            content: 'CLASSIFIED INFORMATION';
+            position: absolute;
+            top: -10px; left: 20px;
+            background: var(--error-red);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .man-link {
+            font-size: 1.2rem;
+            color: white;
+            background-color: var(--error-red);
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 15px;
+            animation: stonks 0.5s ease;
+        }
+
+        @keyframes stonks {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            80% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            border-top: 1px solid #333;
+            color: #555;
+        }
+
+        /* --- MOBILE RESPONSIVENESS (Chaos Adaptation) --- */
+        @media (max-width: 768px) {
+            .glitch-title { font-size: 2.5rem; }
+            .container { padding: 1rem; }
+            .terminal-body { font-size: 0.8rem; padding: 10px; }
+            section { margin-bottom: 2rem; }
+            .stack-grid { grid-template-columns: repeat(3, 1fr); }
+            .chaos-btn { font-size: 1.1rem; padding: 10px 20px; }
+            
+            /* Custom cursor is annoying on mobile, hide it */
+            #cursor, #cursor-dot { display: none !important; }
+            * { cursor: auto !important; }
+        }
+
+        @media (max-width: 480px) {
+            .stack-grid { grid-template-columns: repeat(2, 1fr); }
+            .projects-container { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="matrix-bg" id="matrixBg"></div>
-<div class="scanline"></div>
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+    <div class="crt-overlay"></div>
+    <div class="scanline"></div>
+    <canvas id="noise-canvas"></canvas>
 
-<div class="content">
+    <div class="container">
+        
+        <header>
+            <div class="glitch-title" data-text="LAB MAN NIE">LAB MAN NIE</div>
+            <p class="subtitle">// Experimenting in Prod Since 2023</p>
+            <div class="visitor-counter">
+                LAB VISITORS: <span id="count">000000</span>
+                <script>
+                    // Fake counter because single file implies no backend
+                    document.getElementById('count').innerText = Math.floor(Math.random() * 900000) + 100000;
+                </script>
+            </div>
+        </header>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-top">
-      <div class="avatar-zone">
-        <div class="avatar">🧪<div class="avatar-glitch"></div></div>
-        <div class="status-dot" title="Online (allegedly)"></div>
-      </div>
-      <div class="header-meta">
-        <div class="codename"><span class="codename-glitch" data-text="LAB MAN NIE">LAB MAN NIE</span></div>
-        <div class="handle">@labmannie &nbsp;·&nbsp; <a href="https://github.com/labmannie" target="_blank">github.com/labmannie</a></div>
-        <div class="tagline">"It works on my machine." — Ancient Proverb</div>
-        <div class="badges">
-          <span class="badge badge-green">☕ 90% Caffeine</span>
-          <span class="badge badge-red">🔒 Security: None</span>
-          <span class="badge badge-yellow">🐛 Bugs = Features™</span>
-          <span class="badge badge-blue">🐧 Arch Linux BTW</span>
-          <span class="badge badge-pink">🧠 NIE Labs</span>
+        <section id="whoami" class="visible">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="terminal-body">
+                    <div>
+                        <span class="cmd">labmannie@NIE:~$</span> whoami
+                    </div>
+                    <div class="output">
+                        > Role      : Breaking things so you don't have to<br>
+                        > Location  : 127.0.0.1 (Localhost, Bangalore)<br>
+                        > Institute : NIE, Bangalore 🏛️<br>
+                        > Mission   : Trying to center a div (day 312)<br>
+                        > Fuel      : ☕☕☕☕ <span class="critical">[CRITICAL]</span><br>
+                        > Tests     : 0 (by design, not accident)<br>
+                        > Motto     : "It works on my machine." — Ancient Proverb
+                    </div>
+                    <div>
+                        <span class="cmd">labmannie@NIE:~$</span><span class="typed-cursor">█</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="chaos-btn-wrap">
+            <a href="https://labmannie.github.io/labmannie" target="_blank" class="chaos-btn">
+                🚀 ENTER THE CHAOS LAB
+            </a>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 10px;">(Click for full JS/Glitch/Matrix experience)</p>
         </div>
-      </div>
+
+        <section id="stack">
+            <h2>🛠️ <span class="glitch-title" style="font-size: 1.5rem; display: inline;">Tech Stack</span></h2>
+            <div class="stack-grid">
+                <div class="stack-item">Python</div>
+                <div class="stack-item">C / C++</div>
+                <div class="stack-item">TypeScript</div>
+                <div class="stack-item">JavaScript</div>
+                <div class="stack-item">HTML/CSS</div>
+                <div class="stack-item">Django</div>
+                <div class="stack-item">React</div>
+                <div class="stack-item">Linux (Arch)</div>
+                <div class="stack-item">Docker</div>
+                <div class="stack-item">Git</div>
+                <div class="stack-item">MySQL</div>
+            </div>
+        </section>
+
+        <section id="experiments">
+            <h2>📦 <span class="glitch-title" style="font-size: 1.5rem; display: inline;">Classified Lab Reports</span></h2>
+            <br>
+            <div class="projects-container">
+                <div class="project-card">
+                    <h3>nvme-smart-analytics</h3>
+                    <p>Predictive failure modeling for SSDs. Your hardware has secrets.</p>
+                    <span class="status-badge stable">🔬 Actually Works™</span>
+                    <a href="#" style="float:right;">[VIEW]</a>
+                </div>
+                <div class="project-card">
+                    <h3>NIESync</h3>
+                    <p>Syncing NIE! Type safety: strictly optional.</p>
+                    <span class="status-badge evolving">🔄 Actively Syncing</span>
+                    <a href="#" style="float:right;">[VIEW]</a>
+                </div>
+                <div class="project-card">
+                    <h3>AI_Lab</h3>
+                    <p>Where AI meets "does this even run?" energy.</p>
+                    <span class="status-badge evolving">🧠 Evolving</span>
+                    <a href="#" style="float:right;">[VIEW]</a>
+                </div>
+                <div class="project-card">
+                    <h3>django-calc</h3>
+                    <p>Computes 2+2=5 occasionally. Einstein approved.</p>
+                    <span class="status-badge volatile">⚠️ Volatile</span>
+                    <a href="#" style="float:right;">[VIEW]</a>
+                </div>
+                <div class="project-card">
+                    <h3>capstone</h3>
+                    <p>The final boss. No cheat codes. Godspeed.</p>
+                    <span class="status-badge critical-status">🔥 CRITICAL</span>
+                    <a href="#" style="float:right;">[VIEW]</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="actual-man" class="real-man-section">
+            <h2 style="color: white; text-shadow: 0 0 10px var(--error-red);">SYSTEM UNMASKING</h2>
+            <p style="color: #ccc; margin-top: 10px;">The chaos is managed. The div is (almost) centered. Behold, the organic entity behind the mask:</p>
+            
+            <a href="https://github.com/smartkidzee" target="_blank" class="man-link">
+                👤 github.com/smartkidzee
+            </a>
+            <p style="color: #555; font-size: 0.8rem; margin-top: 10px;">(Warning: Accessing this profile may result in excessive logic and properly tested code)</p>
+        </section>
+
     </div>
-    <div class="terminal-prompt">
-      <div class="prompt-line">
-        <span class="ps1">labmannie@NIE:~$</span>
-        <span style="color:#c8d0d8">whoami</span>
-        <span class="cursor"></span>
-      </div>
-      <div class="output">
-        &gt; Role: Breaking things so you don't have to<br>
-        &gt; Location: 127.0.0.1 (Localhost, Bangalore)<br>
-        &gt; Current mission: <span style="color:#ffd700">Trying to center a div (day 47)</span><br>
-        &gt; Stack Overflow tabs open: <span class="err">23</span><br>
-        &gt; Last deploy: <span style="color:#ff4444">PROD ⚠️ (no tests, YOLO)</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- TICKER -->
-  <div class="ticker" id="ticker">Segfaults are just the OS telling you it cares.</div>
+    <footer>
+        <p>End of Line. 🖥️ // "I don't always test my code, but when I do, I do it in production."</p>
+        <p style="opacity: 0.3; margin-top: 5px;">Built with pure HTML/CSS chaos. No JS frameworks were harmed.</p>
+    </footer>
 
-  <!-- ABOUT -->
-  <div class="box" id="boxAbout">
-    <div class="box-header" onclick="toggleBox('boxAbout')">
-      <span>🔬</span><span>SUBJECT_INFO.txt</span><span class="chevron">▼</span>
-    </div>
-    <div class="box-body">
-      <div class="warning-box">⚠️ WARNING: Operates on 90% caffeine and 10% Stack Overflow copy-paste. Side effects include 3am commits and "it worked yesterday" syndrome.</div>
-      <div class="about-grid">
-        <div class="about-row"><span class="about-key">CODENAME:</span><span class="about-val">Lab Man NIE</span></div>
-        <div class="about-row"><span class="about-key">LOCATION:</span><span class="about-val">127.0.0.1</span></div>
-        <div class="about-row"><span class="about-key">INSTITUTE:</span><span class="about-val">NIE, Bangalore</span></div>
-        <div class="about-row"><span class="about-key">STATUS:</span><span class="about-val blink-green">● ONLINE</span></div>
-        <div class="about-row"><span class="about-key">FUEL:</span><span class="about-val">☕☕☕☕</span></div>
-        <div class="about-row"><span class="about-key">TESTS:</span><span class="about-val" style="color:#ff4444">0 (by choice)</span></div>
-        <div class="about-row"><span class="about-key">PROD DEPLOYS:</span><span class="about-val">Too many</span></div>
-        <div class="about-row"><span class="about-key">THERAPY:</span><span class="about-val">src.needed</span></div>
-      </div>
-    </div>
-  </div>
+    <script>
+        // --- 1. Custom Cursor ---
+        const cursor = document.getElementById('cursor');
+        const dot = document.getElementById('cursor-dot');
+        
+        // Don't run cursor logic on mobile touch devices
+        if (matchMedia('(pointer:fine)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                // Smooth follow for outer circle
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                // Instant follow for inner dot
+                dot.style.left = e.clientX + 'px';
+                dot.style.top = e.clientY + 'px';
+            });
 
-  <!-- TECH STACK -->
-  <div class="box" id="boxStack">
-    <div class="box-header" onclick="toggleBox('boxStack')">
-      <span>🛠️</span><span>TOOLKIT.sh — Weapons of Mass Semicolons</span><span class="chevron">▼</span>
-    </div>
-    <div class="box-body">
-      <div class="tech-grid">
-        <span class="tech-pill tp-py">🐍 Python</span>
-        <span class="tech-pill tp-c">⚡ C</span>
-        <span class="tech-pill tp-ts">🔷 TypeScript</span>
-        <span class="tech-pill tp-js">🟡 JavaScript</span>
-        <span class="tech-pill tp-html">🔶 HTML5</span>
-        <span class="tech-pill tp-css">🎨 CSS3</span>
-        <span class="tech-pill tp-dj">🎸 Django</span>
-        <span class="tech-pill tp-react">⚛️ React</span>
-        <span class="tech-pill tp-stl">📊 Streamlit</span>
-        <span class="tech-pill tp-git">🔥 Git</span>
-        <span class="tech-pill tp-linux">🐧 Linux</span>
-        <span class="tech-pill tp-docker">🐳 Docker</span>
-        <span class="tech-pill tp-mysql">🗄️ MySQL</span>
-        <span class="tech-pill tp-vsc">💙 VSCode</span>
-      </div>
-      <hr class="divider" style="margin-top:14px"/>
-      <div style="font-size:11px;color:#4a5568;margin-bottom:10px">Proficiency levels (self-reported, take with 🧂)</div>
-      <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:82%;background:#ffd700"></div></div><span class="skill-pct">82%</span></div>
-      <div class="skill-row"><span class="skill-name">Django</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:70%;background:#44b78b"></div></div><span class="skill-pct">70%</span></div>
-      <div class="skill-row"><span class="skill-name">JS</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:60%;background:#f0db4f"></div></div><span class="skill-pct">60%</span></div>
-      <div class="skill-row"><span class="skill-name">C</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:45%;background:#4d9de0"></div></div><span class="skill-pct">45%</span></div>
-      <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:35%;background:#007acc"></div></div><span class="skill-pct">35%</span></div>
-      <div class="skill-row"><span class="skill-name">Centering divs</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:3%;background:#ff4444"></div></div><span class="skill-pct">3%</span></div>
-      <div class="skill-row"><span class="skill-name">Writing tests</span><div class="skill-bar-bg"><div class="skill-bar" style="--w:0%;background:#ff4444"></div></div><span class="skill-pct">0%</span></div>
-    </div>
-  </div>
+            // Add hover effect on interactive elements
+            const interactives = document.querySelectorAll('a, .stack-item, .project-card, .chaos-btn');
+            interactives.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            });
+        } else {
+            // Hide custom cursor on mobile
+            cursor.style.display = 'none';
+            dot.style.display = 'none';
+        }
 
-  <!-- EXPERIMENTS -->
-  <div class="box" id="boxExp">
-    <div class="box-header" onclick="toggleBox('boxExp')">
-      <span>📦</span><span>EXPERIMENTS.log — Classified Repos</span><span class="chevron">▼</span>
-    </div>
-    <div class="box-body">
-      <table class="exp-table">
-        <thead><tr><th>Experiment</th><th>Description</th><th>Stability</th><th>Threat Lvl</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/nvme-smart-failure-analytics" target="_blank">nvme-smart-failure-analytics</a></td>
-            <td style="color:#8892a0;font-size:11px">NVMe SMART telemetry + predictive failure modeling. Your SSD has secrets. This repo spills them.</td>
-            <td><span class="stab stab-ai">🔬 Actually Works™</span></td>
-            <td style="color:#39ff14;font-size:11px">LOW</td>
-          </tr>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/NIESync" target="_blank">NIESync</a></td>
-            <td style="color:#8892a0;font-size:11px">Syncing NIE! TypeScript entered the chat. Type safety: optional. Chaos: mandatory.</td>
-            <td><span class="stab stab-new">🔄 Actively Syncing</span></td>
-            <td style="color:#4d9de0;font-size:11px">MEDIUM</td>
-          </tr>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/AI_Lab" target="_blank">AI_Lab</a></td>
-            <td style="color:#8892a0;font-size:11px">All Lab programs. Where AI meets "does this even run?" energy. Import errors included free.</td>
-            <td><span class="stab stab-ai">🧠 Evolving</span></td>
-            <td style="color:#39ff14;font-size:11px">MEDIUM</td>
-          </tr>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/students-django" target="_blank">students-django</a></td>
-            <td style="color:#8892a0;font-size:11px">NIE students tracked in 4K Ultra HD. Privacy? Never heard of her.</td>
-            <td><span class="stab stab-ok">✅ Stable-ish</span></td>
-            <td style="color:#39ff14;font-size:11px">LOW</td>
-          </tr>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/django-calc" target="_blank">django-calc</a></td>
-            <td style="color:#8892a0;font-size:11px">Computes 2+2=5 occasionally. Einstein approved this message.</td>
-            <td><span class="stab stab-warn">⚠️ Volatile</span></td>
-            <td style="color:#ffd700;font-size:11px">MEDIUM</td>
-          </tr>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/capstone" target="_blank">capstone</a></td>
-            <td style="color:#8892a0;font-size:11px">Capstone SDP. The final boss. No cheat codes. No Stack Overflow. Godspeed.</td>
-            <td><span class="stab stab-crit">🔥 CRITICAL</span></td>
-            <td style="color:#ff4444;font-size:11px;animation:blink 1s step-end infinite">🚨 DEFCON 1</td>
-          </tr>
-          <tr>
-            <td><a class="exp-link" href="https://github.com/labmannie/DSA_project" target="_blank">DSA_project</a></td>
-            <td style="color:#8892a0;font-size:11px">Task Master in C. Data Structures & Anxiety. The pointer made me cry.</td>
-            <td><span class="stab stab-pain">🧠 Painful</span></td>
-            <td style="color:#a78bfa;font-size:11px">EXISTENTIAL</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- STATS -->
-  <div class="box" id="boxStats">
-    <div class="box-header" onclick="toggleBox('boxStats')">
-      <span>📊</span><span>LAB_METRICS.dat — Numbers Go Brrr</span><span class="chevron">▼</span>
-    </div>
-    <div class="box-body">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num" id="commits">0</div><div class="stat-label">COMMITS (all bugfixes)</div></div>
-        <div class="stat-card"><div class="stat-num" id="issues">0</div><div class="stat-label">ISSUES CREATED BY SELF</div></div>
-        <div class="stat-card"><div class="stat-num" id="tabs">0</div><div class="stat-label">BROWSER TABS OPEN</div></div>
-        <div class="stat-card"><div class="stat-num" id="coffees">0</div><div class="stat-label">COFFEES TODAY</div></div>
-        <div class="stat-card"><div class="stat-num" id="stackoverflow">0</div><div class="stat-label">SO VISITS / DAY</div></div>
-        <div class="stat-card"><div class="stat-num" id="sleephrs">0</div><div class="stat-label">SLEEP HOURS / NIGHT</div></div>
-      </div>
-      <hr class="divider"/>
-      <div style="font-size:10px;color:#4a5568;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase">Contribution Graph (reconstructed from memory)</div>
-      <div class="commit-grid" id="commitGrid"></div>
-      <div style="display:flex;gap:8px;margin-top:8px;align-items:center;font-size:10px;color:#4a5568">
-        <span>Less</span>
-        <div class="commit-day c0" style="width:10px;height:10px"></div>
-        <div class="commit-day c1" style="width:10px;height:10px"></div>
-        <div class="commit-day c2" style="width:10px;height:10px"></div>
-        <div class="commit-day c3" style="width:10px;height:10px"></div>
-        <div class="commit-day c4" style="width:10px;height:10px"></div>
-        <span>More</span>
-      </div>
-    </div>
-  </div>
+        // --- 2. Noise Background ---
+        const canvas = document.getElementById('noise-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-  <!-- MEMES -->
-  <div class="box" id="boxMeme">
-    <div class="box-header" onclick="toggleBox('boxMeme')">
-      <span>🎭</span><span>DAILY_DOPAMINE.exe — Meme-ory Leak</span><span class="chevron">▼</span>
-    </div>
-    <div class="box-body">
-      <div class="meme-zone">
-        <pre class="meme-ascii" id="memeAscii">  ( •_•)
-  ( •_•)>⌐■-■
-  (⌐■-■)</pre>
-        <div class="meme-text" id="memeText">Loading the dankest meme from the heap...</div>
-        <button class="meme-btn" onclick="nextMeme()">[ NEXT_MEME.sh ]</button>
-      </div>
-      <hr class="divider"/>
-      <div style="font-size:10px;color:#4a5568;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Uptime (mood) — last 30 days</div>
-      <div class="uptime-bar" id="uptimeBar"></div>
-      <div style="display:flex;gap:14px;margin-top:6px;font-size:10px">
-        <span style="color:#39ff14">■ Vibing</span>
-        <span style="color:#ffd700">■ Debugging</span>
-        <span style="color:#ff4444">■ Crying at compiler</span>
-      </div>
-    </div>
-  </div>
+        function noise() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const idata = ctx.createImageData(w, h);
+            const buffer32 = new Uint32Array(idata.data.buffer);
+            const len = buffer32.length;
+            
+            for (let i = 0; i < len; i++) {
+                if (Math.random() < 0.5) buffer32[i] = 0xff000000;
+            }
+            
+            ctx.putImageData(idata, 0, 0);
+            requestAnimationFrame(noise);
+        }
+        // Uncomment to enable heavy noise (can affect performance)
+        // noise(); 
 
-  <!-- FOOTER -->
-  <div class="footer">
-    <div class="footer-quote">"I don't always test my code, but when I do, I do it in production."</div>
-    <div class="footer-end" style="margin-top:8px;font-size:12px">
-      Experimenting in Prod Since 2023 &nbsp;·&nbsp;
-      <span style="animation:blink 1.5s step-end infinite;display:inline-block">▌</span>
-      &nbsp;End of Line.
-    </div>
-    <div style="margin-top:12px">
-      <a href="https://github.com/labmannie" style="color:#39ff14;font-size:11px;text-decoration:none;opacity:0.6">← back to github.com/labmannie</a>
-    </div>
-  </div>
 
-</div>
+        // --- 3. Scroll-trigger Visibility (Intersection Observer) ---
+        const sections = document.querySelectorAll('section');
+        const observerOptions = {
+            root: null,
+            threshold: 0.1, // Trigger when 10% visible
+            rootMargin: "0px"
+        };
 
-<script>
-const jokes = [
-  "Segfaults are just the OS telling you it cares.",
-  "My code doesn't have bugs. It has random features.",
-  "rm -rf node_modules is self-care.",
-  "It's not a bug, it's a feature nobody asked for.",
-  "Compiling... jk, I use Python. Crying instead.",
-  "git blame: it's always the previous me.",
-  "The real bugs were the friends we made along the way.",
-  "sudo make me a sandwich. — last words before Makefile exploded.",
-  "CSS: the art of crying in 3 browsers at once.",
-  "Stackoverflow is just autocomplete for thoughts.",
-];
-let jokeIdx = 0;
-setInterval(()=>{ document.getElementById('ticker').textContent = jokes[jokeIdx++ % jokes.length]; }, 4000);
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Add slight random drift animation on appear
+                    entry.target.style.animation = `stonks 0.6s ease`;
+                }
+            });
+        }, observerOptions);
 
-const memes = [
-  { ascii: `  ( •_•)\n  ( •_•)>⌐■-■\n  (⌐■-■)`, text: "When the code works on the first try and you don't know why." },
-  { ascii: `  (╯°□°）╯︵ ┻━┻`, text: "Me after spending 3 hours on a missing semicolon." },
-  { ascii: `  ┬─┬ノ( º _ ºノ)`, text: "...okay let me put the table back. I need it." },
-  { ascii: `   ¯\\_(ツ)_/¯`, text: "Pushed to main. Works? Ships. Doesn't? Also ships." },
-  { ascii: `  (•_•) <( it works)\n  ( •_•) <( on my machine)\n  (•_•) <( ship it then)`, text: "The DevOps pipeline in its natural habitat." },
-  { ascii: `  👁️ 📄 👁️\n     👄`, text: "Reading my own code 2 weeks later." },
-  { ascii: `  [████████████ ] 99%\n  [■            ] Install Tests`, text: "Accurate representation of every project." },
-  { ascii: `  try {\n    /* TODO */\n  } catch(e) {\n    console.log('🙏')\n  }`, text: "Professional error handling in the wild." },
-];
-let memeIdx = 0;
-function nextMeme(){
-  memeIdx = (memeIdx+1) % memes.length;
-  document.getElementById('memeAscii').textContent = memes[memeIdx].ascii;
-  document.getElementById('memeText').textContent = memes[memeIdx].text;
-}
-document.getElementById('memeText').textContent = memes[0].text;
+        sections.forEach(section => {
+            observer.observe(section);
+        });
 
-function toggleBox(id){ document.getElementById(id).classList.toggle('collapsed'); }
 
-const targets = { commits:847, issues:312, tabs:34, coffees:7, stackoverflow:47, sleephrs:4 };
-Object.entries(targets).forEach(([k,v])=>{
-  const el = document.getElementById(k);
-  let n=0; const step = Math.ceil(v/40);
-  const iv = setInterval(()=>{ n=Math.min(n+step,v); el.textContent=n; if(n>=v)clearInterval(iv); }, 30);
-});
+        // --- 4. Interactive Chaos (Element Drift on Hover) ---
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate rotation based on mouse position relative to center
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) translateY(-5px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = ''; // Reset on leave
+            });
+        });
 
-const grid = document.getElementById('commitGrid');
-const dist = [0,0,0,0,1,1,1,2,2,2,3,3,4];
-for(let i=0;i<280;i++){
-  const d=document.createElement('div');
-  const c=dist[Math.floor(Math.random()*dist.length)];
-  d.className=`commit-day c${c}`;
-  if(c>0) d.title=`${c*3} commit${c>1?'s':''} (probably all bugfixes)`;
-  grid.appendChild(d);
-}
+        // --- 5. Terminal "Typing" effect for command ---
+        // Just a simple visual blink, the text is static for single-file simplicity.
+        setInterval(() => {
+            const cursorSpan = document.querySelector('.typed-cursor');
+            if(cursorSpan) {
+                cursorSpan.style.opacity = cursorSpan.style.opacity === '0' ? '1' : '0';
+            }
+        }, 500);
 
-const uptime=document.getElementById('uptimeBar');
-const moods=['#39ff14','#39ff14','#ffd700','#39ff14','#ff4444','#ffd700','#39ff14','#39ff14','#ffd700','#39ff14'];
-for(let i=0;i<30;i++){
-  const s=document.createElement('div');
-  s.className='uptime-seg';
-  s.style.background=moods[i%moods.length];
-  s.style.opacity='0.8';
-  s.title=i%5===2?'Debugging (major incident)':i%7===4?'Crying at compiler':'Vibing';
-  uptime.appendChild(s);
-}
-
-const bg=document.getElementById('matrixBg');
-const chars='01アイウエオカキクケコ<>/{}[];:ラリルレロ';
-for(let i=0;i<20;i++){
-  const col=document.createElement('div');
-  col.className='matrix-col';
-  col.style.left=(Math.random()*100)+'%';
-  col.style.animationDuration=(6+Math.random()*12)+'s';
-  col.style.animationDelay=(Math.random()*8)+'s';
-  col.style.fontSize=(9+Math.floor(Math.random()*5))+'px';
-  let txt='';
-  for(let j=0;j<40;j++) txt+=chars[Math.floor(Math.random()*chars.length)];
-  col.textContent=txt;
-  bg.appendChild(col);
-}
-</script>
+    </script>
 </body>
 </html>
